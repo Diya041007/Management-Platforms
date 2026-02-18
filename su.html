@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FMCG RFP Pro | Supplier Management Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === GLOBAL STYLES === */
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff6b6b;
+            --success: #4cd964;
+            --warning: #ffd166;
+            --info: #118ab2;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: var(--accent); }
+        }
+
+        /* === HEADER & NAVIGATION === */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .nav-links a:hover {
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .nav-links a:hover:before {
+            left: 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* === PAGES === */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 100px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* === HOME PAGE === */
+        #home {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" opacity="0.1"><path fill="%236a11cb" d="M0 0h1200v800H0z"/><circle cx="300" cy="200" r="150" fill="%232575fc"/><circle cx="900" cy="600" r="120" fill="%23ff6b6b"/></svg>');
+            background-size: cover;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .hero-content {
+            flex: 1;
+            animation: slideInLeft 1s ease;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+
+        .hero-image {
+            flex: 1;
+            animation: slideInRight 1s ease;
+        }
+
+        .floating-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            animation: float 6s ease-in-out infinite;
+            transition: var(--transition);
+        }
+
+        .floating-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            text-align: center;
+            animation: bounceIn 1s ease;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--dark);
+            opacity: 0.7;
+        }
+
+        /* === RFP LIST PAGE === */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: var(--dark);
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .rfp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .rfp-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .rfp-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .rfp-header {
+            padding: 20px;
+            background: var(--gradient);
+            color: white;
+        }
+
+        .rfp-body {
+            padding: 20px;
+        }
+
+        .rfp-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .rfp-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-open {
+            background: rgba(76, 217, 100, 0.2);
+            color: var(--success);
+        }
+
+        .badge-closed {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--accent);
+        }
+
+        .rfp-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .rfp-desc {
+            color: var(--dark);
+            opacity: 0.7;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .rfp-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        /* === CREATE RFP PAGE === */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* === SUPPLIER PORTAL === */
+        .supplier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .supplier-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .supplier-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .supplier-header {
+            padding: 20px;
+            text-align: center;
+            background: var(--gradient);
+            color: white;
+        }
+
+        .supplier-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .supplier-body {
+            padding: 20px;
+        }
+
+        .supplier-rating {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .supplier-rating i {
+            color: var(--warning);
+        }
+
+        .specializations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .specialization {
+            background: rgba(106, 17, 203, 0.1);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* === ANALYTICS PAGE === */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .analytics-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* === ABOUT PAGE === */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-image {
+            flex: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-img {
+            height: 200px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        .team-info {
+            padding: 20px;
+        }
+
+        /* === CONTACT PAGE === */
+        .contact-container {
+            display: flex;
+            gap: 50px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-form {
+            flex: 1;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .info-item:hover {
+            transform: translateX(10px);
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* === FOOTER === */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* === RESPONSIVE DESIGN === */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* === NOTIFICATIONS === */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            animation: slideInRight 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(100px); }
+        }
+
+        /* === MODAL === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow);
+            animation: bounceIn 0.5s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        /* === SEARCH & FILTER === */
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark);
+            opacity: 0.7;
+        }
+
+        .filter-select {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            min-width: 150px;
+        }
+
+        /* === PROGRESS BARS === */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo" onclick="showPage('home')">
+                    <i class="fas fa-boxes"></i>
+                    FMCG RFP Pro
+                </a>
+                <div class="nav-links">
+                    <a href="#" onclick="showPage('home')">Home</a>
+                    <a href="#" onclick="showPage('rfps')">RFPs</a>
+                    <a href="#" onclick="showPage('create')">Create RFP</a>
+                    <a href="#" onclick="showPage('suppliers')">Suppliers</a>
+                    <a href="#" onclick="showPage('analytics')">Analytics</a>
+                    <a href="#" onclick="showPage('about')">About</a>
+                    <a href="#" onclick="showPage('contact')">Contact</a>
+                </div>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" onclick="toggleLoginModal()">Login</a>
+                    <a href="#" class="btn btn-primary" onclick="toggleSignupModal()">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <section id="home" class="page active">
+        <div class="container">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Revolutionizing FMCG Sourcing with Smart RFP Platform</h1>
+                    <p>Streamline your procurement process, connect with verified suppliers, and make data-driven decisions with our intelligent RFP management platform.</p>
+                    <div class="auth-buttons">
+                        <a href="#" class="btn btn-primary" onclick="showPage('create')">
+                            <i class="fas fa-plus"></i> Create RFP
+                        </a>
+                        <a href="#" class="btn btn-outline" onclick="showPage('rfps')">
+                            <i class="fas fa-search"></i> Browse RFPs
+                        </a>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat1">0</div>
+                            <div class="stat-label">Active RFPs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat2">0</div>
+                            <div class="stat-label">Verified Suppliers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat3">0</div>
+                            <div class="stat-label">Procurement Value</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="floating-card">
+                        <h3><i class="fas fa-chart-line"></i> Live RFP Dashboard</h3>
+                        <p>Track your RFPs in real-time with our interactive dashboard</p>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>RFP Completion</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div style="height: 150px; background: var(--gradient); border-radius: 10px; margin-top: 20px; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-chart-bar" style="font-size: 3rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RFP List Page -->
+    <section id="rfps" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>Active Request for Proposals</h2>
+                <p>Browse through open RFPs from leading FMCG companies and submit your proposals.</p>
+            </div>
+            
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" id="searchRfp" placeholder="Search RFPs..." onkeyup="filterRfps()">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <select class="filter-select" id="categoryFilter" onchange="filterRfps()">
+                    <option value="">All Categories</option>
+                    <option value="Ingredients">Ingredients</option>
+                    <option value="Packaging">Packaging</option>
+                    <option value="Logistics">Logistics</option>
+                    <option value="Equipment">Equipment</option>
+                </select>
+                <select class="filter-select" id="statusFilter" onchange="filterRfps()">
+                    <option value="">All Status</option>
+                    <option value="Open">Open</option>
+                    <option value="Closing Soon">Closing Soon</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </div>
+            
+            <div class="rfp-grid" id="rfpGrid">
+                <!-- RFPs will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Create RFP Page -->
+    <section id="create" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>Create New Request for Proposal</h2>
+                <p>Fill out the form below to create a new RFP and connect with qualified suppliers.</p>
+            </div>
+            <div class="form-container">
+                <form id="rfpForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="rfpTitle">RFP Title</label>
+                            <input type="text" class="form-control" id="rfpTitle" placeholder="e.g., Organic Coconut Oil Supply" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="category">Category</label>
+                            <select class="form-control" id="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Ingredients">Ingredients</option>
+                                <option value="Packaging">Packaging</option>
+                                <option value="Logistics">Logistics</option>
+                                <option value="Equipment">Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="description">RFP Description</label>
+                        <textarea class="form-control" id="description" placeholder="Describe your requirements in detail..." required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="budget">Budget ($)</label>
+                            <input type="number" class="form-control" id="budget" placeholder="50000" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="deadline">Submission Deadline</label>
+                            <input type="date" class="form-control" id="deadline" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="requirements">Key Requirements</label>
+                        <textarea class="form-control" id="requirements" placeholder="List your key requirements..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Evaluation Criteria</label>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <div style="flex: 1;">
+                                <label>Price Weight (%)</label>
+                                <input type="number" class="form-control" id="priceWeight" value="40" min="0" max="100" required>
+                            </div>
+                            <div style="flex: 1;">
+                                <label>Quality Weight (%)</label>
+                                <input type="number" class="form-control" id="qualityWeight" value="35" min="0" max="100" required>
+                            </div>
+                            <div style="flex: 1;">
+                                <label>Delivery Weight (%)</label>
+                                <input type="number" class="form-control" id="deliveryWeight" value="25" min="0" max="100" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Publish RFP
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supplier Portal Page -->
+    <section id="suppliers" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>Verified Supplier Network</h2>
+                <p>Connect with our network of pre-vetted suppliers specializing in FMCG categories.</p>
+            </div>
+            
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" id="searchSupplier" placeholder="Search suppliers..." onkeyup="filterSuppliers()">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <select class="filter-select" id="specializationFilter" onchange="filterSuppliers()">
+                    <option value="">All Specializations</option>
+                    <option value="Organic">Organic</option>
+                    <option value="Packaging">Packaging</option>
+                    <option value="Logistics">Logistics</option>
+                    <option value="Ingredients">Ingredients</option>
+                </select>
+            </div>
+            
+            <div class="supplier-grid" id="supplierGrid">
+                <!-- Suppliers will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Page -->
+    <section id="analytics" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>Procurement Analytics Dashboard</h2>
+                <p>Gain insights into your RFP performance and supplier relationships.</p>
+            </div>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>Total RFPs</h3>
+                    <div class="stat-number" id="analytics1">0</div>
+                    <p>Active this quarter</p>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Supplier Response Rate</h3>
+                    <div class="stat-number" id="analytics2">0%</div>
+                    <p>Average across all RFPs</p>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Cost Savings</h3>
+                    <div class="stat-number" id="analytics3">0%</div>
+                    <p>Compared to last year</p>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Avg. Response Time</h3>
+                    <div class="stat-number" id="analytics4">0 days</div>
+                    <p>From RFP to first proposal</p>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>RFP Performance by Category</h3>
+                <div id="categoryChart" style="height: 300px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="categoryChartCanvas" width="400" height="200"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Supplier Performance Metrics</h3>
+                <div id="supplierChart" style="height: 300px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="supplierChartCanvas" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Page -->
+    <section id="about" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>About FMCG RFP Pro</h2>
+                <p>Transforming how FMCG companies connect with suppliers through technology.</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Mission</h3>
+                    <p>We're on a mission to streamline the procurement process for Fast-Moving Consumer Goods companies by providing an intelligent, transparent, and efficient RFP platform.</p>
+                    <p>Our platform connects FMCG companies with verified suppliers, making the sourcing process faster, more cost-effective, and data-driven.</p>
+                    <div class="auth-buttons" style="margin-top: 30px;">
+                        <a href="#" class="btn btn-primary" onclick="showPage('contact')">Contact Us</a>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="floating-card">
+                        <h3><i class="fas fa-rocket"></i> Why Choose Us?</h3>
+                        <ul style="list-style: none; padding: 0; margin-top: 20px;">
+                            <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: 10px;"></i>
+                                AI-Powered Supplier Matching
+                            </li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: 10px;"></i>
+                                Real-Time Analytics
+                            </li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: 10px;"></i>
+                                Secure Document Management
+                            </li>
+                            <li style="padding: 10px 0;">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: 10px;"></i>
+                                Global Supplier Network
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="page-header" style="margin-top: 80px;">
+                <h2>Our Team</h2>
+                <p>Meet the experts behind FMCG RFP Pro</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-img">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="team-info">
+                        <h3>Sarah Johnson</h3>
+                        <p>CEO & Founder</p>
+                        <p>15+ years in FMCG procurement</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="team-info">
+                        <h3>Michael Chen</h3>
+                        <p>CTO</p>
+                        <p>Technology innovation expert</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="team-info">
+                        <h3>Emily Rodriguez</h3>
+                        <p>Head of Analytics</p>
+                        <p>Data-driven decision making</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Page -->
+    <section id="contact" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>Get In Touch</h2>
+                <p>Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Our Office</h3>
+                            <p>123 Business District, City</p>
+                            <p>State, ZIP Code</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Phone Number</h3>
+                            <p>+1 (555) 123-4567</p>
+                            <p>Mon-Fri 9am-6pm</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email Address</h3>
+                            <p>info@fmcg-rfppro.com</p>
+                            <p>support@fmcg-rfppro.com</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <div class="form-container">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label class="form-label" for="name">Full Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" placeholder="your.email@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="subject">Subject</label>
+                                <input type="text" class="form-control" id="subject" placeholder="What is this regarding?" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="message">Message</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Your message..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FMCG RFP Pro</h3>
+                    <p>Revolutionizing FMCG procurement through technology, transparency, and efficiency.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showPage('home')">Home</a></li>
+                        <li><a href="#" onclick="showPage('rfps')">Browse RFPs</a></li>
+                        <li><a href="#" onclick="showPage('create')">Create RFP</a></li>
+                        <li><a href="#" onclick="showPage('suppliers')">Suppliers</a></li>
+                        <li><a href="#" onclick="showPage('analytics')">Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Webinars</a></li>
+                        <li><a href="#">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">GDPR Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FMCG RFP Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to Your Account</h2>
+                <button class="modal-close" onclick="toggleLoginModal()">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" class="form-control" id="loginEmail" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="Your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="#" onclick="toggleLoginModal(); toggleSignupModal();" style="color: var(--primary);">Sign up here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Your Account</h2>
+                <button class="modal-close" onclick="toggleSignupModal()">&times;</button>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label class="form-label" for="signupName">Full Name</label>
+                    <input type="text" class="form-control" id="signupName" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signupEmail">Email Address</label>
+                    <input type="email" class="form-control" id="signupEmail" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signupPassword">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signupCompany">Company</label>
+                    <input type="text" class="form-control" id="signupCompany" placeholder="Your company name" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Already have an account? <a href="#" onclick="toggleSignupModal(); toggleLoginModal();" style="color: var(--primary);">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let rfps = [];
+        let suppliers = [];
+        let currentUser = null;
+
+        // Initialize data
+        function initializeData() {
+            // Sample RFPs
+            rfps = [
+                {
+                    id: 1,
+                    title: "Organic Coconut Oil Supply",
+                    category: "Ingredients",
+                    budget: 50000,
+                    deadline: "2024-02-15",
+                    status: "Open",
+                    description: "Seeking reliable suppliers of organic virgin coconut oil for our new product line. Minimum order quantity: 1000L monthly.",
+                    requirements: "USDA Organic Certified, Sustainable sourcing practices, Minimum 1000L monthly capacity",
+                    responses: 12,
+                    createdBy: "Global Foods Inc."
+                },
+                {
+                    id: 2,
+                    title: "Eco-Friendly Packaging",
+                    category: "Packaging",
+                    budget: 75000,
+                    deadline: "2024-02-20",
+                    status: "Open",
+                    description: "Looking for sustainable packaging solutions for FMCG products. Must be 100% biodegradable and customizable.",
+                    requirements: "100% Biodegradable, Custom printing capability, Moisture resistant",
+                    responses: 8,
+                    createdBy: "EcoGoods Ltd."
+                },
+                {
+                    id: 3,
+                    title: "Logistics & Distribution",
+                    category: "Logistics",
+                    budget: 120000,
+                    deadline: "2024-02-10",
+                    status: "Closing Soon",
+                    description: "Require logistics partner for nationwide distribution of FMCG products. Must have cold chain capabilities.",
+                    requirements: "Nationwide coverage, Cold chain capabilities, Real-time tracking",
+                    responses: 15,
+                    createdBy: "FreshMart Corp"
+                },
+                {
+                    id: 4,
+                    title: "Bakery Equipment Maintenance",
+                    category: "Equipment",
+                    budget: 35000,
+                    deadline: "2024-01-30",
+                    status: "Closed",
+                    description: "Seeking maintenance service provider for industrial bakery equipment across multiple locations.",
+                    requirements: "Certified technicians, 24/7 support, Multiple location coverage",
+                    responses: 6,
+                    createdBy: "BakeRight Industries"
+                }
+            ];
+
+            // Sample Suppliers
+            suppliers = [
+                {
+                    id: 1,
+                    name: "GreenHarvest Organics",
+                    specialization: ["Organic", "Ingredients"],
+                    rating: 4.7,
+                    description: "Leading supplier of organic ingredients with certifications from USDA and EU Organic.",
+                    responseTime: "24h",
+                    certifications: ["USDA Organic", "Fair Trade"]
+                },
+                {
+                    id: 2,
+                    name: "EcoPack Solutions",
+                    specialization: ["Packaging", "Biodegradable"],
+                    rating: 5.0,
+                    description: "Innovative packaging solutions with focus on biodegradability and circular economy.",
+                    responseTime: "48h",
+                    certifications: ["FSC Certified", "Recyclable"]
+                },
+                {
+                    id: 3,
+                    name: "Global Logistics Partners",
+                    specialization: ["Logistics", "Distribution"],
+                    rating: 4.2,
+                    description: "Comprehensive logistics services including cold chain, warehousing and distribution.",
+                    responseTime: "12h",
+                    certifications: ["ISO 9001", "GDP Certified"]
+                },
+                {
+                    id: 4,
+                    name: "Pure Ingredients Co.",
+                    specialization: ["Ingredients", "Organic"],
+                    rating: 4.5,
+                    description: "Supplier of high-quality natural ingredients for food and beverage industry.",
+                    responseTime: "36h",
+                    certifications: ["Organic Certified", "Kosher"]
+                }
+            ];
+
+            // Render initial data
+            renderRfps();
+            renderSuppliers();
+            updateAnalytics();
+            animateStats();
+        }
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Update analytics when showing analytics page
+            if (pageId === 'analytics') {
+                updateAnalytics();
+                renderCharts();
+            }
+        }
+
+        // Render RFPs
+        function renderRfps(filteredRfps = null) {
+            const rfpGrid = document.getElementById('rfpGrid');
+            const dataToRender = filteredRfps || rfps;
+            
+            rfpGrid.innerHTML = '';
+            
+            dataToRender.forEach(rfp => {
+                const daysLeft = calculateDaysLeft(rfp.deadline);
+                const status = daysLeft <= 0 ? 'Closed' : (daysLeft <= 3 ? 'Closing Soon' : 'Open');
+                
+                const rfpCard = document.createElement('div');
+                rfpCard.className = 'rfp-card';
+                rfpCard.innerHTML = `
+                    <div class="rfp-header">
+                        <h3>${rfp.title}</h3>
+                        <p>Deadline: ${formatDate(rfp.deadline)}</p>
+                    </div>
+                    <div class="rfp-body">
+                        <div class="rfp-meta">
+                            <span class="rfp-badge ${status === 'Open' ? 'badge-open' : (status === 'Closing Soon' ? 'badge-closed' : 'badge-closed')}">${status}</span>
+                            <span>Budget: $${rfp.budget.toLocaleString()}</span>
+                        </div>
+                        <p class="rfp-desc">${rfp.description}</p>
+                        <div class="specializations">
+                            <span class="specialization">${rfp.category}</span>
+                        </div>
+                    </div>
+                    <div class="rfp-footer">
+                        <span><i class="far fa-clock"></i> ${daysLeft > 0 ? `${daysLeft} days left` : 'Closed'}</span>
+                        <button class="btn btn-primary" onclick="submitProposal(${rfp.id})">Submit Proposal</button>
+                    </div>
+                `;
+                rfpGrid.appendChild(rfpCard);
+            });
+        }
+
+        // Render Suppliers
+        function renderSuppliers(filteredSuppliers = null) {
+            const supplierGrid = document.getElementById('supplierGrid');
+            const dataToRender = filteredSuppliers || suppliers;
+            
+            supplierGrid.innerHTML = '';
+            
+            dataToRender.forEach(supplier => {
+                const ratingStars = generateRatingStars(supplier.rating);
+                
+                const supplierCard = document.createElement('div');
+                supplierCard.className = 'supplier-card';
+                supplierCard.innerHTML = `
+                    <div class="supplier-header">
+                        <div class="supplier-avatar">
+                            <i class="fas fa-${supplier.specialization.includes('Logistics') ? 'truck' : (supplier.specialization.includes('Packaging') ? 'recycle' : 'seedling')}"></i>
+                        </div>
+                        <h3>${supplier.name}</h3>
+                        <p>${supplier.specialization.join(', ')}</p>
+                    </div>
+                    <div class="supplier-body">
+                        <div class="supplier-rating">
+                            ${ratingStars}
+                            <span>${supplier.rating}</span>
+                        </div>
+                        <p>${supplier.description}</p>
+                        <div class="specializations">
+                            ${supplier.specialization.map(spec => `<span class="specialization">${spec}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                supplierGrid.appendChild(supplierCard);
+            });
+        }
+
+        // Filter RFPs
+        function filterRfps() {
+            const searchTerm = document.getElementById('searchRfp').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const filteredRfps = rfps.filter(rfp => {
+                const matchesSearch = rfp.title.toLowerCase().includes(searchTerm) || 
+                                    rfp.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || rfp.category === categoryFilter;
+                
+                const daysLeft = calculateDaysLeft(rfp.deadline);
+                let status = 'Open';
+                if (daysLeft <= 0) status = 'Closed';
+                else if (daysLeft <= 3) status = 'Closing Soon';
+                
+                const matchesStatus = !statusFilter || status === statusFilter;
+                
+                return matchesSearch && matchesCategory && matchesStatus;
+            });
+            
+            renderRfps(filteredRfps);
+        }
+
+        // Filter Suppliers
+        function filterSuppliers() {
+            const searchTerm = document.getElementById('searchSupplier').value.toLowerCase();
+            const specializationFilter = document.getElementById('specializationFilter').value;
+            
+            const filteredSuppliers = suppliers.filter(supplier => {
+                const matchesSearch = supplier.name.toLowerCase().includes(searchTerm) || 
+                                    supplier.description.toLowerCase().includes(searchTerm);
+                const matchesSpecialization = !specializationFilter || 
+                                            supplier.specialization.includes(specializationFilter);
+                
+                return matchesSearch && matchesSpecialization;
+            });
+            
+            renderSuppliers(filteredSuppliers);
+        }
+
+        // Create RFP Form Submission
+        document.getElementById('rfpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('rfpTitle').value;
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value;
+            const budget = parseInt(document.getElementById('budget').value);
+            const deadline = document.getElementById('deadline').value;
+            const requirements = document.getElementById('requirements').value;
+            const priceWeight = parseInt(document.getElementById('priceWeight').value);
+            const qualityWeight = parseInt(document.getElementById('qualityWeight').value);
+            const deliveryWeight = parseInt(document.getElementById('deliveryWeight').value);
+            
+            // Validate weights add up to 100
+            if (priceWeight + qualityWeight + deliveryWeight !== 100) {
+                showNotification('Evaluation weights must add up to 100%', 'error');
+                return;
+            }
+            
+            const newRfp = {
+                id: rfps.length + 1,
+                title,
+                category,
+                budget,
+                deadline,
+                status: "Open",
+                description,
+                requirements,
+                responses: 0,
+                createdBy: currentUser ? currentUser.name : "Anonymous User",
+                evaluationCriteria: {
+                    price: priceWeight,
+                    quality: qualityWeight,
+                    delivery: deliveryWeight
+                }
+            };
+            
+            rfps.unshift(newRfp);
+            
+            // Reset form
+            document.getElementById('rfpForm').reset();
+            
+            // Show success message
+            showNotification('RFP created successfully!');
+            
+            // Navigate to RFP list
+            showPage('rfps');
+        });
+
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real app, you would send this data to a server
+            console.log('Contact form submitted:', { name, email, subject, message });
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+            
+            // Show success message
+            showNotification('Message sent successfully! We will get back to you soon.');
+        });
+
+        // Login Form Submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation (in a real app, this would be done on the server)
+            if (email && password) {
+                currentUser = {
+                    name: "Demo User",
+                    email: email,
+                    company: "Demo Company"
+                };
+                
+                toggleLoginModal();
+                showNotification('Login successful! Welcome back.');
+            } else {
+                showNotification('Please enter both email and password.', 'error');
+            }
+        });
+
+        // Signup Form Submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const company = document.getElementById('signupCompany').value;
+            
+            // Simple validation
+            if (name && email && password && company) {
+                currentUser = {
+                    name: name,
+                    email: email,
+                    company: company
+                };
+                
+                toggleSignupModal();
+                showNotification('Account created successfully! Welcome to FMCG RFP Pro.');
+            } else {
+                showNotification('Please fill in all fields.', 'error');
+            }
+        });
+
+        // Submit Proposal
+        function submitProposal(rfpId) {
+            if (!currentUser) {
+                showNotification('Please login to submit a proposal.', 'error');
+                toggleLoginModal();
+                return;
+            }
+            
+            const rfp = rfps.find(r => r.id === rfpId);
+            if (rfp) {
+                rfp.responses++;
+                showNotification(`Proposal submitted for "${rfp.title}" successfully!`);
+                renderRfps();
+                updateAnalytics();
+            }
+        }
+
+        // Update Analytics
+        function updateAnalytics() {
+            const totalRfps = rfps.length;
+            const activeRfps = rfps.filter(rfp => calculateDaysLeft(rfp.deadline) > 0).length;
+            const totalResponses = rfps.reduce((sum, rfp) => sum + rfp.responses, 0);
+            const avgResponseRate = totalRfps > 0 ? Math.round((totalResponses / totalRfps) * 100) : 0;
+            
+            document.getElementById('analytics1').textContent = totalRfps;
+            document.getElementById('analytics2').textContent = `${avgResponseRate}%`;
+            document.getElementById('analytics3').textContent = '15%';
+            document.getElementById('analytics4').textContent = '2.3';
+        }
+
+        // Render Charts
+        function renderCharts() {
+            // Category distribution chart
+            const categoryCounts = {};
+            rfps.forEach(rfp => {
+                categoryCounts[rfp.category] = (categoryCounts[rfp.category] || 0) + 1;
+            });
+            
+            const categoryCtx = document.getElementById('categoryChartCanvas').getContext('2d');
+            
+            // Simple bar chart implementation
+            const categories = Object.keys(categoryCounts);
+            const counts = Object.values(categoryCounts);
+            
+            // Clear previous canvas
+            categoryCtx.clearRect(0, 0, 400, 200);
+            
+            // Draw bars
+            const barWidth = 300 / categories.length;
+            const maxCount = Math.max(...counts);
+            
+            categories.forEach((category, index) => {
+                const barHeight = (counts[index] / maxCount) * 150;
+                const x = 50 + index * barWidth;
+                const y = 180 - barHeight;
+                
+                // Draw bar
+                categoryCtx.fillStyle = index % 2 === 0 ? '#6a11cb' : '#2575fc';
+                categoryCtx.fillRect(x, y, barWidth - 10, barHeight);
+                
+                // Draw label
+                categoryCtx.fillStyle = '#2d3436';
+                categoryCtx.font = '12px Arial';
+                categoryCtx.fillText(category, x, 195);
+                categoryCtx.fillText(counts[index].toString(), x + 5, y - 5);
+            });
+            
+            // Supplier performance chart
+            const supplierCtx = document.getElementById('supplierChartCanvas').getContext('2d');
+            
+            // Clear previous canvas
+            supplierCtx.clearRect(0, 0, 400, 200);
+            
+            // Draw bars for supplier ratings
+            const supplierNames = suppliers.map(s => s.name.substring(0, 10));
+            const ratings = suppliers.map(s => s.rating);
+            
+            supplierNames.forEach((name, index) => {
+                const barHeight = (ratings[index] / 5) * 150;
+                const x = 50 + index * 70;
+                const y = 180 - barHeight;
+                
+                // Draw bar
+                supplierCtx.fillStyle = index % 2 === 0 ? '#ff6b6b' : '#4cd964';
+                supplierCtx.fillRect(x, y, 50, barHeight);
+                
+                // Draw label
+                supplierCtx.fillStyle = '#2d3436';
+                supplierCtx.font = '10px Arial';
+                supplierCtx.fillText(name, x, 195);
+                supplierCtx.fillText(ratings[index].toFixed(1), x + 15, y - 5);
+            });
+        }
+
+        // Animate Stats
+        function animateStats() {
+            animateValue('stat1', 0, 142, 1500);
+            animateValue('stat2', 0, 87, 1500);
+            animateValue('stat3', 0, 52, 1500);
+        }
+
+        // Helper function to animate numbers
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                obj.innerHTML = id === 'stat3' ? `$${value}M+` : `${value}+`;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = type === 'error' ? 'var(--accent)' : 'var(--success)';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after animation
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Toggle Modals
+        function toggleLoginModal() {
+            document.getElementById('loginModal').classList.toggle('active');
+        }
+
+        function toggleSignupModal() {
+            document.getElementById('signupModal').classList.toggle('active');
+        }
+
+        // Helper Functions
+        function calculateDaysLeft(deadline) {
+            const today = new Date();
+            const deadlineDate = new Date(deadline);
+            const diffTime = deadlineDate - today;
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function generateRatingStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            
+            // Set minimum date for deadline to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('deadline').min = today;
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.rfp-card, .supplier-card, .analytics-card, .team-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+<html>
